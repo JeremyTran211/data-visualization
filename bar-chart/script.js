@@ -2,7 +2,12 @@
 d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json")
   .then(response => {
       console.log(response); 
-      makeChart(response.data);  
+      makeChart(response.data);
+        
+      // Get source link
+      const sourceLink = response.source_name;
+      d3.select("#source-link").html(`<a href="${sourceLink}" target="_blank">Source: BEA.gov</a>`);
+
   })
   .catch(error => {
       console.error('Error loading the data:', error);
