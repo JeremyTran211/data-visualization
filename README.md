@@ -1,1 +1,1 @@
-# data-visualization
+# Freecodecamp Projects
