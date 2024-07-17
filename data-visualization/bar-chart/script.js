@@ -3,7 +3,7 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
   .then(response => {
       console.log(response); 
       makeChart(response.data);
-        
+
       // Get source link
       const sourceLink = response.source_name;
       d3.select("#source-link").html(`<a href="${sourceLink}" target="_blank">Source: BEA.gov</a>`);
@@ -66,16 +66,19 @@ function makeChart(ds) {
         .attr("y", d => y(d.value))
         .attr("width", graphWidth / ds.length - 2)
         .attr("height", d => graphHeight - y(d.value))
-        .style("fill", d => d.value > 500 ? "red" : "green");
-
-    svg.selectAll(".bar")
+        .attr("data-date", d => d3.timeFormat("%Y-%m-%d")(d.date)) // Add data-date attribute
+        .attr("data-gdp", d => d.value) // Add data-gdp attribute
+        .style("fill", d => d.value > 500 ? "red" : "green")
         .on("mouseover", function(event, d) {
-            d3.select(this)
-                .style("fill", "black");
+            const tooltip = d3.select("#tooltip");
+            tooltip.transition().duration(200).style("opacity", 0.9);
+            tooltip.html(`Date: ${d3.timeFormat("%Y-%m-%d")(d.date)}<br>GDP: ${d.value}`)
+                .attr("data-date", d3.timeFormat("%Y-%m-%d")(d.date))
+                .style("left", (event.pageX + 5) + "px")
+                .style("top", (event.pageY - 28) + "px");
         })
-        .on("mouseout", function(event, d) {
-            d3.select(this)
-                .style("fill", d => d.value > 500 ? "red" : "green");
+        .on("mouseout", function() {
+            d3.select("#tooltip").transition().duration(500).style("opacity", 0);
         });
 
     }
